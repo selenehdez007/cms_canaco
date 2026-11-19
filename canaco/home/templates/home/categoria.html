@@ -1,0 +1,52 @@
+{% extends 'partials/base.html' %} 
+{% load static %} 
+{% block title %}Categorías{% endblock %} 
+{% block content %} 
+<section class="section category-page"> 
+<div class="container"> 
+<div class="row mb-4"> 
+<div class="col-lg-8"> 
+<h2 class="posts-entry-title"> 
+{% if categoria_seleccionada %}Categoría: {{ categoria_seleccionada.nombre }}{% else %}Todas las categorías{% endif %} 
+</h2> 
+</div> 
+<div class="col-lg-4"> 
+<form method="get"> 
+    <label class="visually-hidden" for="categoria">Filtrar por categoría</label> 
+    <select class="form-control category-filter" id="categoria" name="categoria" onchange="this.form.submit()"> 
+        <option value="">Todas las categorías</option> 
+        {% for categoria in categorias %} 
+        <option value="{{ categoria.pk }}" {% if categoria_seleccionada.pk == categoria.pk %}selected{% endif %}>{{ categoria.nombre }}</option> 
+        {% endfor %} 
+    </select> 
+</form> 
+</div> 
+</div> 
+
+{% for noticia in publicaciones %} 
+<div class="row mb-5 align-items-center"> 
+    <div class="col-lg-3"> 
+        <a href="{% url 'home:noticia_detalle' noticia.pk %}" class="img-link"> 
+            {% if noticia.imagen_portada %} 
+            <img src="{{ noticia.imagen_portada.display_url }}" alt="{{ noticia.titulo }}" class="img-fluid category-post-image"> 
+            {% else %} 
+            <img src="{% static 'images/hero_1.jpg' %}" alt="{{ noticia.titulo }}" class="img-fluid category-post-image"> 
+            {% endif %} 
+        </a> 
+    </div> 
+    <div class="col-lg-8"> 
+        <span class="date">
+            {{ noticia.createdat|date:"d/m/Y" }} &bullet;
+            <span class="category-name">{{ noticia.categoria|default:"Sin categoría" }}</span>
+        </span> 
+        <h2 class="category-publication-title"><a href="{% url 'home:noticia_detalle' noticia.pk %}">{{ noticia.titulo }}</a></h2> 
+        <p>{{ noticia.resumen }}</p> 
+        <p><a href="{% url 'home:noticia_detalle' noticia.pk %}" class="btn btn-sm btn-outline-primary category-read-more">Leer más</a></p> 
+    </div> 
+</div> 
+{% empty %} 
+<p>No hay noticias{% if categoria_seleccionada %} para la categoría {{ categoria_seleccionada.nombre }}{% endif %}.</p> 
+{% endfor %} 
+</div> 
+</section> 
+{% endblock content %} 

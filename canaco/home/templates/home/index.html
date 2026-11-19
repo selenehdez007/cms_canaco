@@ -1,14 +1,135 @@
- <!DOCTYPE html> 
-    <html lang="en"> 
-    <head> 
-    <meta charset="UTF-8"> 
-    <meta name="viewport" 
-    content="width=device-width, initial
-    scale=1.0"> 
-    <title>Document</title> 
-    </head> 
-    <body> 
-    <h1> Estas en la página index 
-    bienvenidos</h1> 
-    </body> 
-    </html> 
+{% extends 'partials/base.html' %} 
+{% load static %} 
+
+{% block title %}Inicio{% endblock %} 
+
+{% block content %} 
+<section class="home-carousel-section bg-light py-4"> 
+    <div class="container">
+        <div id="carouselExampleDark" class="carousel carousel-overlay slide" data-bs-theme="dark" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% if noticias_destacadas %}
+                    {% for noticia in noticias_destacadas %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}" data-bs-interval="4500"> 
+                            <a href="{% url 'home:noticia_detalle' noticia.pk %}" class="home-carousel-link d-block position-relative"> 
+                                {% if noticia.imagen_portada %}
+                                    <img src="{{ noticia.imagen_portada.display_url }}" class="d-block w-100 rounded-5 home-carousel-image" style="height: 400px; object-fit: cover; object-position: center;" alt="{{ noticia.titulo }}"> 
+                                {% else %}
+                                    <img src="{% static 'images/hero_1.jpg' %}" class="d-block w-100 rounded-5 home-carousel-image" style="height: 400px; object-fit: cover; object-position: center;" alt="{{ noticia.titulo }}"> 
+                                {% endif %}
+                                <div class="carousel-caption home-carousel-caption text-start"> 
+                                    <span>{{ noticia.createdat|date:"d/m/Y" }}</span> 
+                                    <h2>{{ noticia.titulo }}</h2> 
+                                    <p>{{ noticia.resumen }}</p> 
+                                </div> 
+                            </a> 
+                        </div> 
+                    {% endfor %}
+                {% else %}
+                    <div class="carousel-item active" data-bs-interval="4500"> 
+                        <div class="home-carousel-link d-block position-relative"> 
+                            <img src="{% static 'images/hero_1.jpg' %}" class="d-block w-100 rounded-5 home-carousel-image" style="height: 400px; object-fit: cover; object-position: center;" alt=""> 
+                            <div class="carousel-caption home-carousel-caption text-start"> 
+                                <h2>No hay noticias publicadas todavía</h2> 
+                                <p>Las publicaciones aparecerán aquí.</p> 
+                            </div> 
+                        </div> 
+                    </div> 
+                {% endif %}
+            </div> 
+
+          
+            <div class="carousel-overlay-controls d-flex justify-content-between align-items-center px-4 py-3">
+                <button class="btn-icon btn-sm btn-subtle theme-secondary" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+                    <span class="carousel-icon-prev" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                
+                <div class="carousel-indicators position-static m-0"> 
+                    {% if noticias_destacadas %}
+                        {% for noticia in noticias_destacadas %}
+                            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ forloop.counter }}"></button>
+                        {% endfor %}
+                    {% else %}
+                        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    {% endif %}
+                </div>
+
+                <button class="btn-icon btn-sm btn-subtle theme-secondary" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+                    <span class="carousel-icon-next" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</section> 
+<section class="section recent-news-section py-5"> 
+    <div class="container"> 
+        <div class="row mb-4 justify-content-center"> 
+            <div class="col-lg-8 text-center"> 
+                <h2 class="posts-entry-title">Noticias recientes</h2> 
+                <a href="#" class="read-more">Ver todas</a> 
+            </div> 
+        </div> 
+
+        <div class="row justify-content-center"> 
+            {% if noticias %}
+                {% for noticia in noticias %}
+                    <div class="col-lg-4 mb-4"> 
+                        <div class="post-entry-alt"> 
+                            <a href="{% url 'home:noticia_detalle' noticia.pk %}" class="img-link"> 
+                                {% comment %} <img src="" alt="titulo" class="img-fluid publication-card-image" style="height: 200px; width: 100%; object-fit: cover; object-position: center;"> {% endcomment %}
+                                {% if noticia.imagen_portada %}
+                                    <img src="{{ noticia.imagen_portada.display_url }}" alt="{{ noticia.titulo }}" class="img-fluid publication-card-image" style="height: 200px; width: 100%; object-fit: cover; object-position: center;"> 
+                                {% else %}
+                                    <img src="{% static 'images/img_1_horizontal.jpg' %}" alt="{{ noticia.titulo }}" class="img-fluid publication-card-image" style="height: 200px; width: 100%; object-fit: cover; object-position: center;"> 
+                                {% endif %}
+                            </a> 
+                            <div class="excerpt"> 
+                                <h2><a href="{% url 'home:noticia_detalle' noticia.pk %}">{{ noticia.titulo }}</a></h2> 
+                                <div class="post-meta align-items-center text-left clearfix"> 
+                                    <span>{{ noticia.createdat|date:"d/m/Y" }}</span> 
+                                    <span>&nbsp;-&nbsp;{{ noticia.categoria|default:"Sin categoría" }}</span> 
+                                </div> 
+                                <p>{{ noticia.resumen }}</p> 
+                                <p><a href="{% url 'home:noticia_detalle' noticia.pk %}" class="read-more">Saber más</a></p> 
+                                <small>Visitas: {{ noticia.visitas }}</small> 
+                            </div> 
+                        </div> 
+                    </div> 
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center"> 
+                    <p class="text-muted mt-2">No hay noticias publicadas todavía.</p> 
+                </div> 
+            {% endif %}
+        </div> 
+    </div> 
+</section> 
+
+<div class="modal fade" id="modalInicio" tabindex="-1" aria-labelledby="modalInicioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalInicioLabel">CANACO</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>PAGINA DE NOTICAS  REALES DE CANACO NOTIACIAS  </p>
+            </div>
+            <div class="modal-footer">   
+                
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">MAS TARDE</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalElement = document.getElementById('modalInicio');
+        if (modalElement) {
+            bootstrap.Modal.getOrCreateInstance(modalElement).show();
+        }
+    });
+</script>
+{% endblock content %}

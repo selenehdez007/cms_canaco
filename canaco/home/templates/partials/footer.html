@@ -1,0 +1,94 @@
+{% load static %} 
+    <footer class="site-footer bg-dark text-white py-5"> 
+        <div class="container"> 
+            <div class="row"> 
+                <div class="col-lg-4"> 
+                    <div class="widget"> 
+                        <h3 class="mb-4 text-white">Acerca de</h3> 
+                        <p class="text-white-50">NOTICIAS DE ULTIMOM MOMENTO </p> 
+                    </div> <!-- /.widget --> 
+                    <div class="widget"> 
+                        <h3 class="text-white">Redes Sociales</h3> 
+                        <ul class="list-unstyled social"> 
+                            <li>
+                                <a href="#" aria-label="Facebook" title="Facebook">
+                                    <span aria-hidden="true">
+                                        <svg class="facebook-social-icon" viewBox="0 0 24 24" focusable="false">
+                                            <path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.3-1.5 1.6-1.5h1.7V3.7c-.3 0-1.4-.1-2.6-.1-2.6 0-4.4 1.6-4.4 4.5v1.8H7v3.1h2.8v8h3.7z"/>
+                                        </svg>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul> 
+                    </div> <!-- /.widget --> 
+                </div> <!-- /.col-lg-4 --> 
+                <div class="col-lg-4 ps-lg-5"> 
+                    <div class="widget"> 
+                        <h3 class="mb-4 text-white">Empresa</h3> 
+                        <ul class="list-unstyled float-start links"> 
+                            <li><a href="#" class="text-white-50">Sobre nosotros</a></li> 
+                            <li><a href="#" class="text-white-50">Servicios</a></li> 
+                            <li><a href="#" class="text-white-50">Visión</a></li> 
+                            <li><a href="#" class="text-white-50">Misión</a></li> 
+                            <li><a href="#" class="text-white-50">Términos</a></li> 
+                            <li><a href="#" class="text-white-50">Privacidad</a></li> 
+                        </ul> 
+                        <ul class="list-unstyled float-start links"> 
+                            <li><a href="#" class="text-white-50">Socios</a></li> 
+                            <li><a href="#" class="text-white-50">Negocios</a></li> 
+                            <li><a href="#" class="text-white-50">Empleos</a></li> 
+                            <li><a href="#" class="text-white-50">Blog</a></li> 
+                            <li><a href="#" class="text-white-50">Preguntas Frecuentes</a></li> 
+                            <li><a href="#" class="text-white-50">Creativos</a></li> 
+                        </ul> 
+                    </div> <!-- /.widget --> 
+                </div> <!-- /.col-lg-4 --> 
+                <div class="col-lg-4"> 
+                    <div class="widget"> 
+                        <h3 class="mb-4 text-white">Entradas Recientes</h3> 
+                        <div class="post-entry-footer"> 
+                            <ul> 
+                                {% for noticia in global_recientes %}
+                                <li> 
+                                    <a href="{% url 'home:noticia_detalle' noticia.pk %}"> 
+                                        {% if noticia.imagen_portada %}
+                                        <img src="{{ noticia.imagen_portada.display_url }}" alt="{{ noticia.titulo }}" class="me-4 rounded" style="width: 70px; height: 70px; object-fit: cover;">
+                                        {% else %}
+                                        <img src="{% static 'images/img_1_sq.jpg' %}" alt="{{ noticia.titulo }}" class="me-4 rounded" style="width: 70px; height: 70px; object-fit: cover;">
+                                        {% endif %}
+                                        <div class="text"> 
+                                            <h4 class="text-white">{{ noticia.titulo }}</h4> 
+                                            <div class="post-meta"> 
+                                                <span class="mr-2 text-white-50">{{ noticia.createdat|date:"d M, Y" }}</span> 
+                                            </div> 
+                                        </div> 
+                                    </a> 
+                                </li> 
+                                {% empty %}
+                                <li><span class="text-white-50">No hay noticias recientes.</span></li>
+                                {% endfor %}
+                            </ul> 
+                        </div> 
+ 
+                    </div> <!-- /.widget --> 
+                </div> <!-- /.col-lg-4 --> 
+            </div> <!-- /.row --> 
+ 
+            <div class="row mt-5"> 
+                <div class="col-12 text-center text-white-50"> 
+          <!--  
+              **========== 
+              NOTE:  
+              Please don't remove this copyright link unless you buy the license here 
+https://untree.co/license/   
+              **========== 
+            --> 
+ 
+            <p> &copy;<script>document.write(new Date().getFullYear());</script>. Todos los derechos 
+reservados. &mdash; Diseñado POR WENDY  <a href="https://untree.co" class="text-white"></a> Distribuido por <a 
+href="https://themewagon.com" class="text-white">BOOSTRAP</a> <!-- License information: https://untree.co/license/ --> 
+            </p> 
+          </div> 
+        </div> 
+      </div> <!-- /.container --> 
+    </footer> <!-- /.site-footer -->
